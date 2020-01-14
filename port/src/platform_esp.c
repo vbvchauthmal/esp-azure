@@ -12,7 +12,15 @@
 #include "esp_log.h"
 #include "tlsio_pal.h"
 
+#ifdef CONFIG_TARGET_PLATFORM_ESP8266
 #include "lwip/apps/sntp.h"
+#else
+#include "apps/sntp/sntp.h"
+#endif
+
+
+//#include "lwip/apps/sntp_time.h"
+#define TICK_RATE CONFIG_FREERTOS_HZ
 
 static const char* TAG = "platform";
 

@@ -11,12 +11,19 @@
 #include "esp_event_loop.h"
 #include "esp_log.h"
 #include "esp_attr.h"
+#include "nvs_flash.h"
 
 #include "lwip/err.h"
 #include "azure_c_shared_utility/agenttime.h"
 #include "azure_c_shared_utility/xlogging.h"
 
+#ifdef CONFIG_TARGET_PLATFORM_ESP8266
 #include "lwip/apps/sntp.h"
+#else
+#include "apps/sntp/sntp.h"
+#endif
+
+
 
 void initialize_sntp(void)
 {
@@ -54,6 +61,7 @@ time_t sntp_get_current_timestamp()
 		// update 'now' variable with current time
 		time(&now);
 	}
+	setenv("TZ", "UTC", 1);
 	localtime_r(&now, &timeinfo);
 	return now;
 }
@@ -65,7 +73,7 @@ time_t get_time(time_t* currentTime)
 }
 
 double get_difftime(time_t stopTime, time_t startTime)
-{	
+{
     return (double)stopTime - (double)startTime;
 }
 
